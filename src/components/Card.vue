@@ -1,7 +1,7 @@
 <script setup>
-import { ref, defineProps, defineEmits } from 'vue'
+import { defineProps, defineEmits } from 'vue'
 
-const isFavorite = ref(false)
+// const isFavorite = ref(false)
 
 defineProps({
   id: {
@@ -16,31 +16,35 @@ defineProps({
     type: String,
     default: '',
   },
+  isFavorite: {
+    type: Boolean,
+    default: false,
+  },
 })
 
-defineEmits(['click'])
-
-const toggleFavorite = () => {
-  isFavorite.value = !isFavorite.value
-}
+defineEmits(['click', 'toggleFavorite'])
 </script>
 
 <template>
   <div
-    class="rounded-lg overflow-hidden shadow-md bg-white max-w-xs hover:shadow-xl transition-shadow duration-300 cursor-pointer"
+    class="rounded-lg overflow-hidden shadow-md bg-white max-w-xs hover:shadow-xl hover:bg-amber-50 transition-shadow duration-300 cursor-pointer"
   >
-    <div class="relative" @click="$emit('click')">
+    <div class="relative pt-10" @click="$emit('click')">
       <div class="flex items-center justify-center">
-        <img :src="image" :alt="name" class="h-40 object-contain" />
+        <img :src="image" :alt="name" class="object-contain w-4/5" />
+      </div>
+      <div class="p-4 flex flex-col justify-center items-center">
+        <h2 class="text-xl font-bold mb-1">{{ name }}</h2>
+        <div class="text-slate-400 font-bold">{{ id }}</div>
       </div>
 
       <button
-        @click.stop="toggleFavorite"
-        class="absolute top-2 right-2 p-2 rounded-full cursor-pointer"
+        @click.stop="$emit('toggleFavorite')"
+        class="absolute top-1 right-1 p-2 rounded-full cursor-pointer"
       >
         <svg
-          class="h-4 w-4"
-          :class="{ 'fill-slate-100': !isFavorite, 'fill-red-500': isFavorite }"
+          class="h-6 w-6"
+          :class="!isFavorite ? 'fill-slate-100' : 'fill-red-500'"
           xmlns="http://www.w3.org/2000/svg"
           viewBox="0 0 512 512"
         >
@@ -49,11 +53,6 @@ const toggleFavorite = () => {
           />
         </svg>
       </button>
-    </div>
-
-    <div class="p-4 flex flex-col justify-center items-center">
-      <h2 class="text-xl font-bold mb-1">{{ name }}</h2>
-      <div class="text-gray-500 mb-2">{{ id }}</div>
     </div>
   </div>
 </template>

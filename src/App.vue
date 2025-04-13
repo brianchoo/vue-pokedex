@@ -14,6 +14,8 @@ const pokemonListParams = ref({
   limit: 0,
 })
 const isModalOpen = ref(false)
+// const isFavorite = ref(false)
+const favoritePokemon = ref(new Map())
 
 // Call initial set of Pokemon
 const initialPokemonList = async () => {
@@ -47,6 +49,15 @@ const closeModal = () => {
   isModalOpen.value = false
 }
 
+const handleFavorite = (pokemon) => {
+  console.log('Pokemon received:', pokemon)
+  if (pokemon && pokemon.details.id) {
+    const pokemonId = pokemon.details.id
+    const isFavorite = favoritePokemon.value.get(pokemonId)
+    favoritePokemon.value.set(pokemonId, !isFavorite)
+  }
+}
+
 onMounted(() => {
   initialPokemonList()
 })
@@ -60,14 +71,16 @@ onMounted(() => {
       {{ searchTerm }}
       <SearchInput :initialValue="searchTerm" @search="handleSearch" />
     </div>
-    <div class="grid grid-cols-6 gap-4 w-3/4 p-5">
+    <div class="grid grid-cols-6 gap-4 w-3/4">
       <Card
         v-for="pokemon in pokemonList"
         :key="pokemon.details.id"
         :name="pokemon.details.name"
         :id="pokemon.details.id"
         :image="pokemon.details.image"
+        :is-favorite="favoritePokemon.get(pokemon.details.id) || false"
         @click="openPokemonModal(pokemon)"
+        @toggle-favorite="() => handleFavorite(pokemon)"
       />
       <div
         class="flex self-center bg-amber-400 h-12 items-center justify-center rounded-md font-bold cursor-pointer hover:bg-amber-600 transition duration-250 ease-in-out"
@@ -76,6 +89,13 @@ onMounted(() => {
         Load More
       </div>
     </div>
-    <Modal :is-open="isModalOpen" :pokemon="selectedPokemon" @close="closeModal" />
+    <Modal
+      :is-open="isModalOpen"
+      :pokemon="selectedPokemon"
+      @close="closeModal"
+      :is-favorite="
+        (selectedPokemon.details && favoritePokemon.get(selectedPokemon.details.id)) || false
+      "
+    />
   </main>
 </template>
