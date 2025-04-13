@@ -1,8 +1,8 @@
 <script setup>
 import Table from './Table.vue'
 import { padString } from '@/helpers/stringManipulation'
-// eslint-disable-next-line no-unused-vars
-const props = defineProps({
+
+defineProps({
   isOpen: {
     type: Boolean,
     default: false,

@@ -7,25 +7,29 @@ const getPokemonList = async (offset, limit) => {
 
   const detailedPokemonList = await Promise.all(
     pokemonList.map(async (pokemon) => {
-      const res = await fetch(pokemon.url)
-      const details = await res.json()
+      try {
+        const res = await fetch(pokemon.url)
+        const details = await res.json()
 
-      return {
-        details: {
-          id: details.id,
-          name: toCapitalize(details.name),
-          image: details.sprites.other['official-artwork'].front_default,
-        },
-        stats: {
-          height: details.height,
-          weight: details.weight,
-          hp: details.stats[0].base_stat,
-          attack: details.stats[1].base_stat,
-          defense: details.stats[2].base_stat,
-          specialAttack: details.stats[3].base_stat,
-          specialDefense: details.stats[4].base_stat,
-          speed: details.stats[5].base_stat,
-        },
+        return {
+          details: {
+            id: details.id,
+            name: toCapitalize(details.name),
+            image: details.sprites.other['official-artwork'].front_default,
+          },
+          stats: {
+            height: details.height,
+            weight: details.weight,
+            hp: details.stats[0].base_stat,
+            attack: details.stats[1].base_stat,
+            defense: details.stats[2].base_stat,
+            specialAttack: details.stats[3].base_stat,
+            specialDefense: details.stats[4].base_stat,
+            speed: details.stats[5].base_stat,
+          },
+        }
+      } catch (error) {
+        console.log('Error in getPokemonList', error)
       }
     }),
   )
@@ -33,8 +37,12 @@ const getPokemonList = async (offset, limit) => {
 }
 
 const loadMorePokemon = async (currentOffset, limit) => {
-  const response = await getPokemonList(currentOffset, limit)
-  return response
+  try {
+    const response = await getPokemonList(currentOffset, limit)
+    return response
+  } catch (error) {
+    console.log('Error in loadMorePokemon', error)
+  }
 }
 
 const getSinglePokemon = async (str) => {

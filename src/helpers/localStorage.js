@@ -1,5 +1,4 @@
 const saveToLocalStorage = (localStorageName, state) => {
-  // Convert Map to an array of entries, then to a plain object for storage
   const favoritesObject = Object.fromEntries(state.value)
   localStorage.setItem(localStorageName, JSON.stringify(favoritesObject))
 }

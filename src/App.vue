@@ -15,7 +15,6 @@ const pokemonList = ref([])
 const selectedPokemon = ref({})
 const pokemonListParams = ref({
   offset: 0,
-  limit: 0,
 })
 
 // Call initial set of Pokemon
@@ -41,7 +40,6 @@ const handleSearch = async (query) => {
       const singlePokemon = await getSinglePokemon(query)
       pokemonList.value = [singlePokemon]
     } catch (err) {
-      // pokemonList.value = []
       error.value = err.message
     }
   } else {
@@ -68,9 +66,19 @@ const closeModal = () => {
 
 const handleFavorite = (pokemon) => {
   if (pokemon && pokemon.details.id) {
-    const pokemonId = pokemon.details.id
-    const isFavorite = favoritePokemon.value.get(pokemonId)
-    favoritePokemon.value.set(pokemonId, !isFavorite)
+    const pokemonId = pokemon?.details?.id
+
+    // redeclare new Map() if initial favoritePokemon value is undefined
+    if (!favoritePokemon.value) {
+      favoritePokemon.value = new Map()
+    }
+
+    if (favoritePokemon?.value.size === 0) {
+      favoritePokemon?.value.set(pokemonId, true)
+    } else {
+      const isFavorite = favoritePokemon?.value.get(pokemonId)
+      favoritePokemon?.value.set(pokemonId, !isFavorite)
+    }
     saveToLocalStorage(LOCALSTORAGE_FAVORITE_POKEMON, favoritePokemon)
   }
 }
@@ -84,7 +92,7 @@ onMounted(() => {
 <template>
   <main class="p-10 bg-amber-200 min-h-screen">
     <h1 class="text-title font-bold text-slate-900">Pokédex</h1>
-    <h3 class="font-bold text-slate-900">Search for a Pokémon by nama or id number</h3>
+    <h3 class="font-bold text-slate-900">Search for a Pokémon by name or id number</h3>
     <div class="my-4">
       <SearchInput :initialValue="searchTerm" @search="handleSearch" />
       <div class="text-red-500 mt-2">{{ error }}</div>
@@ -92,11 +100,11 @@ onMounted(() => {
     <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 lg:w-3/4">
       <Card
         v-for="pokemon in pokemonList"
-        :key="pokemon.details.id"
-        :name="pokemon.details.name"
-        :id="pokemon.details.id"
-        :image="pokemon.details.image"
-        :is-favorite="favoritePokemon.get(pokemon.details.id) || false"
+        :key="pokemon?.details?.id"
+        :name="pokemon?.details?.name"
+        :id="pokemon?.details?.id"
+        :image="pokemon?.details?.image"
+        :is-favorite="favoritePokemon ? favoritePokemon.get(pokemon?.details?.id) : false"
         @click="openPokemonModal(pokemon)"
         @toggle-favorite="() => handleFavorite(pokemon)"
       />
@@ -114,7 +122,8 @@ onMounted(() => {
       @close="closeModal"
       @toggle-favorite="() => handleFavorite(selectedPokemon)"
       :is-favorite="
-        (selectedPokemon.details && favoritePokemon.get(selectedPokemon.details.id)) || false
+        selectedPokemon?.details &&
+        (favoritePokemon ? favoritePokemon.get(selectedPokemon?.details?.id) : false)
       "
     />
   </main>

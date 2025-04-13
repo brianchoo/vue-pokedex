@@ -2,8 +2,6 @@
 import { defineProps, defineEmits } from 'vue'
 import { padString } from '@/helpers/stringManipulation'
 
-// const isFavorite = ref(false)
-
 defineProps({
   id: {
     type: Number,
@@ -44,7 +42,7 @@ defineEmits(['click', 'toggleFavorite'])
         class="absolute top-1 right-1 p-2 rounded-full cursor-pointer"
       >
         <svg
-          class="h-6 w-6"
+          class="h-7 w-7"
           :class="!isFavorite ? 'fill-slate-100' : 'fill-red-500'"
           xmlns="http://www.w3.org/2000/svg"
           viewBox="0 0 512 512"
