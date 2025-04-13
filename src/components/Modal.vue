@@ -31,18 +31,18 @@ defineEmits(['close', 'toggleFavorite'])
         @click.stop
       >
         <div class="flex flex-col md:flex-row h-full">
-          <div class="flex flex-col items-center justify-center md:w-2/5 relative">
-            <img class="w-4/5" :src="pokemon.details.image" :alt="pokemon.details.name" />
+          <div class="flex flex-col items-center justify-center md:w-2/5 relative pt-36 md:pt-0">
+            <img class="w-3/5 lg:w-4/5" :src="pokemon.details.image" :alt="pokemon.details.name" />
             <div class="font-bold text-title">{{ pokemon.details.name }}</div>
-            <div class="font-bold text-title text-slate-400">
+            <div class="font-bold text-title text-slate-400 -mt-3">
               {{ padString(pokemon.details.id, 4) }}
             </div>
             <button
               @click.stop="$emit('toggleFavorite')"
-              class="absolute top-3 right-3 p-2 rounded-full cursor-pointer"
+              class="absolute top-16 md:top-12 right-3 lg:top-12 lg:right-6 p-2 rounded-full cursor-pointer"
             >
               <svg
-                class="h-12 w-12"
+                class="h-16 w-16"
                 :class="!isFavorite ? 'fill-slate-100' : 'fill-red-500'"
                 xmlns="http://www.w3.org/2000/svg"
                 viewBox="0 0 512 512"
@@ -59,9 +59,9 @@ defineEmits(['close', 'toggleFavorite'])
         </div>
         <button
           @click="$emit('close')"
-          class="absolute -top-5 -right-5 rounded-full bg-amber-400 p-2 hover:bg-amber-600 transition duration-250 ease-in-out cursor-pointer"
+          class="absolute -top-6 -right-4 lg:-top-8 lg:-right-8 rounded-full bg-amber-400 p-4 hover:bg-amber-600 transition duration-250 ease-in-out cursor-pointer"
         >
-          <img class="w-10 h-10" src="../assets/icons/xmark-solid.svg" alt="x-mark" />
+          <img class="w-8 h-8 lg:w-12 lg:h-12" src="../assets/icons/xmark-solid.svg" alt="x-mark" />
         </button>
       </div>
     </div>

@@ -83,8 +83,8 @@ onMounted(() => {
 
 <template>
   <main class="p-10 bg-amber-200 min-h-screen">
-    <h1 class="text-title font-bold">Pokedex</h1>
-    <h3 class="font-bold">Search for a Pokemon by nama or id number</h3>
+    <h1 class="text-title font-bold text-slate-900">Pokédex</h1>
+    <h3 class="font-bold text-slate-900">Search for a Pokémon by nama or id number</h3>
     <div class="my-4">
       <SearchInput :initialValue="searchTerm" @search="handleSearch" />
       <div class="text-red-500 mt-2">{{ error }}</div>

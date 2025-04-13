@@ -24,7 +24,7 @@ const handleSearch = () => {
       v-model="searchQuery"
       @keyup.enter="handleSearch"
       placeholder="Name or id number"
-      class="w-full px-4 py-2 pr-10 rounded-sm focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white"
+      class="w-full px-4 py-2 pr-10 rounded-sm focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white text-slate-400"
     />
     <button
       @click="handleSearch"

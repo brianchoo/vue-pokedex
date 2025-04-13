@@ -35,8 +35,8 @@ defineEmits(['click', 'toggleFavorite'])
         <img :src="image" :alt="name" class="object-contain w-4/5" />
       </div>
       <div class="p-4 flex flex-col justify-center items-center">
-        <h2 class="text-xl font-bold mb-1">{{ name }}</h2>
-        <div class="text-slate-400 font-bold">{{ padString(id, 4) }}</div>
+        <h2 class="text-xl font-bold mb-1 text-slate-900">{{ name }}</h2>
+        <div class="text-slate-400 font-bold -mt-1">{{ padString(id, 4) }}</div>
       </div>
 
       <button
