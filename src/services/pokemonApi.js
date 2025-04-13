@@ -1,4 +1,4 @@
-import { toCapitalize } from '@/helpers/toCapitalize'
+import { toCapitalize } from '@/helpers/stringManipulation'
 
 const getPokemonList = async (offset, limit) => {
   const response = await fetch(`https://pokeapi.co/api/v2/pokemon?limit=${limit}&offset=${offset}`)
@@ -10,19 +10,6 @@ const getPokemonList = async (offset, limit) => {
       const res = await fetch(pokemon.url)
       const details = await res.json()
 
-      // return {
-      //   id: details.id,
-      //   name: details.name,
-      //   image: details.sprites.other['official-artwork'].front_default,
-      //   height: details.height,
-      //   weight: details.weight,
-      //   hp: details.stats[0].base_stat,
-      //   attack: details.stats[1].base_stat,
-      //   defense: details.stats[2].base_stat,
-      //   specialAttack: details.stats[3].base_stat,
-      //   specialDefense: details.stats[4].base_stat,
-      //   speed: details.stats[5].base_stat,
-      // }
       return {
         details: {
           id: details.id,
@@ -42,7 +29,6 @@ const getPokemonList = async (offset, limit) => {
       }
     }),
   )
-  console.log(detailedPokemonList)
   return detailedPokemonList
 }
 
@@ -51,4 +37,40 @@ const loadMorePokemon = async (currentOffset, limit) => {
   return response
 }
 
-export { getPokemonList, loadMorePokemon }
+const getSinglePokemon = async (str) => {
+  if (str) {
+    try {
+      const res = await fetch(`https://pokeapi.co/api/v2/pokemon/${str}`)
+
+      if (!res.ok) {
+        throw new Error('No Pokémon found. Try searching again.')
+      }
+
+      const data = await res.json()
+      return {
+        details: {
+          id: data.id,
+          name: toCapitalize(data.name),
+          image: data.sprites.other['official-artwork'].front_default,
+        },
+        stats: {
+          height: data.height,
+          weight: data.weight,
+          hp: data.stats[0].base_stat,
+          attack: data.stats[1].base_stat,
+          defense: data.stats[2].base_stat,
+          specialAttack: data.stats[3].base_stat,
+          specialDefense: data.stats[4].base_stat,
+          speed: data.stats[5].base_stat,
+        },
+      }
+    } catch (error) {
+      console.error('Error in getSinglePokemon:', error)
+      throw error
+    }
+  } else {
+    return
+  }
+}
+
+export { getPokemonList, loadMorePokemon, getSinglePokemon }

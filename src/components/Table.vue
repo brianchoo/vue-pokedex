@@ -32,13 +32,13 @@ const statsLabel = {
       <div v-for="(value, key, index) in pokemon.stats" :key="key" class="flex justify-between">
         <div
           class="font-bold w-6/8 mr-2 px-3 py-2 rounded-sm"
-          :class="index % 2 === 0 ? 'bg-white' : ' bg-slate-50'"
+          :class="index % 2 === 0 ? 'bg-white' : 'bg-slate-50'"
         >
           {{ statsLabel[key] || key }}
         </div>
         <div
           class="font-bold text-right w-2/8 ml-2 px-3 py-2 rounded-sm"
-          :class="index % 2 === 0 ? 'bg-white' : ' bg-slate-50'"
+          :class="index % 2 === 0 ? 'bg-white' : 'bg-slate-50'"
         >
           {{ value }}
         </div>

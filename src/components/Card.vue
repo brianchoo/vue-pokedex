@@ -1,5 +1,6 @@
 <script setup>
 import { defineProps, defineEmits } from 'vue'
+import { padString } from '@/helpers/stringManipulation'
 
 // const isFavorite = ref(false)
 
@@ -35,7 +36,7 @@ defineEmits(['click', 'toggleFavorite'])
       </div>
       <div class="p-4 flex flex-col justify-center items-center">
         <h2 class="text-xl font-bold mb-1">{{ name }}</h2>
-        <div class="text-slate-400 font-bold">{{ id }}</div>
+        <div class="text-slate-400 font-bold">{{ padString(id, 4) }}</div>
       </div>
 
       <button
