@@ -3,49 +3,20 @@ import { onMounted, ref } from 'vue'
 import Card from './components/Card.vue'
 import SearchInput from './components/SearchInput.vue'
 import Modal from './components/Modal.vue'
-import { getPokemonList, loadMorePokemon, getSinglePokemon } from './services/pokemonApi'
 import { loadFromLocalStorage, saveToLocalStorage } from './helpers/localStorage'
-import { POKEMON_PER_API_CALL, LOCALSTORAGE_FAVORITE_POKEMON } from './constants/constants'
+import { LOCALSTORAGE_FAVORITE_POKEMON } from './constants/constants'
+import { useModal } from './composables/useModal'
+import { usePokemon } from './composables/usePokemon'
 
-const isModalOpen = ref(false)
 const favoritePokemon = ref(new Map())
-const searchTerm = ref('')
-const error = ref('')
-const pokemonList = ref([])
-const selectedPokemon = ref({})
-const pokemonListParams = ref({
-  offset: 0,
-})
 
-// Call initial set of Pokemon
-const initialPokemonList = async () => {
-  const response = await getPokemonList(0, POKEMON_PER_API_CALL)
-  pokemonList.value = response
-  pokemonListParams.value.limit = POKEMON_PER_API_CALL
-  pokemonListParams.value.offset = POKEMON_PER_API_CALL
-}
-
-const handleLoadMore = async () => {
-  const response = await loadMorePokemon(pokemonListParams.value.offset, POKEMON_PER_API_CALL)
-  pokemonListParams.value.offset += POKEMON_PER_API_CALL
-  pokemonList.value = [...pokemonList.value, ...response]
-}
+const { isOpen: isModalOpen, selectedPokemon, openModal, closeModal } = useModal()
+const { pokemonList, error, searchTerm, fetchInitialPokemon, loadMore, searchPokemon } =
+  usePokemon()
 
 // Handle search
 const handleSearch = async (query) => {
-  error.value = ''
-  searchTerm.value = query
-  if (query) {
-    try {
-      const singlePokemon = await getSinglePokemon(query)
-      pokemonList.value = [singlePokemon]
-    } catch (err) {
-      error.value = err.message
-    }
-  } else {
-    searchTerm.value = ''
-    initialPokemonList()
-  }
+  searchPokemon(query)
 }
 
 const loadFavoritesFromLocalStorage = () => {
@@ -53,18 +24,7 @@ const loadFavoritesFromLocalStorage = () => {
   favoritePokemon.value = localStorageEntries
 }
 
-const openPokemonModal = (pokemon) => {
-  selectedPokemon.value = {
-    ...pokemon,
-  }
-  isModalOpen.value = true
-}
-
-const closeModal = () => {
-  isModalOpen.value = false
-}
-
-const handleFavorite = (pokemon) => {
+const toggleFavorite = (pokemon) => {
   if (pokemon && pokemon.details.id) {
     const pokemonId = pokemon?.details?.id
 
@@ -84,7 +44,7 @@ const handleFavorite = (pokemon) => {
 }
 
 onMounted(() => {
-  initialPokemonList()
+  fetchInitialPokemon()
   loadFavoritesFromLocalStorage()
 })
 </script>
@@ -105,13 +65,13 @@ onMounted(() => {
         :id="pokemon?.details?.id"
         :image="pokemon?.details?.image"
         :is-favorite="favoritePokemon ? favoritePokemon.get(pokemon?.details?.id) : false"
-        @click="openPokemonModal(pokemon)"
-        @toggle-favorite="() => handleFavorite(pokemon)"
+        @click="openModal(pokemon)"
+        @toggle-favorite="() => toggleFavorite(pokemon)"
       />
       <div
         v-if="!searchTerm || error"
         class="flex self-center bg-amber-400 h-12 items-center justify-center rounded-md font-bold cursor-pointer hover:bg-amber-600 transition duration-250 ease-in-out"
-        @click="handleLoadMore"
+        @click="loadMore"
       >
         Load More
       </div>
@@ -120,7 +80,7 @@ onMounted(() => {
       :is-open="isModalOpen"
       :pokemon="selectedPokemon"
       @close="closeModal"
-      @toggle-favorite="() => handleFavorite(selectedPokemon)"
+      @toggle-favorite="() => toggleFavorite(selectedPokemon)"
       :is-favorite="
         selectedPokemon?.details &&
         (favoritePokemon ? favoritePokemon.get(selectedPokemon?.details?.id) : false)
