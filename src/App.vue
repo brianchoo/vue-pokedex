@@ -2,15 +2,18 @@
 import { onMounted, ref } from 'vue'
 import Card from './components/Card.vue'
 import SearchInput from './components/SearchInput.vue'
+import Modal from './components/Modal.vue'
 import { getPokemonList, loadMorePokemon } from './services/pokemonApi'
 
 const pokemonPerApiCall = 10
 const searchTerm = ref('')
 const pokemonList = ref([])
+const selectedPokemon = ref({})
 const pokemonListParams = ref({
   offset: 0,
   limit: 0,
 })
+const isModalOpen = ref(false)
 
 // Call initial set of Pokemon
 const initialPokemonList = async () => {
@@ -33,6 +36,17 @@ const handleSearch = (query) => {
   searchTerm.value = query
 }
 
+const openPokemonModal = (pokemon) => {
+  selectedPokemon.value = {
+    ...pokemon,
+  }
+  isModalOpen.value = true
+}
+
+const closeModal = () => {
+  isModalOpen.value = false
+}
+
 onMounted(() => {
   initialPokemonList()
 })
@@ -46,13 +60,14 @@ onMounted(() => {
       {{ searchTerm }}
       <SearchInput :initialValue="searchTerm" @search="handleSearch" />
     </div>
-    <div class="grid grid-cols-6 gap-4 w-3/4">
+    <div class="grid grid-cols-6 gap-4 w-3/4 p-5">
       <Card
         v-for="pokemon in pokemonList"
-        :key="pokemon.id"
-        :name="pokemon.name"
-        :id="pokemon.id"
-        :image="pokemon.image"
+        :key="pokemon.details.id"
+        :name="pokemon.details.name"
+        :id="pokemon.details.id"
+        :image="pokemon.details.image"
+        @click="openPokemonModal(pokemon)"
       />
       <div
         class="flex self-center bg-amber-400 h-12 items-center justify-center rounded-md font-bold cursor-pointer hover:bg-amber-600 transition duration-250 ease-in-out"
@@ -61,5 +76,6 @@ onMounted(() => {
         Load More
       </div>
     </div>
+    <Modal :is-open="isModalOpen" :pokemon="selectedPokemon" @close="closeModal" />
   </main>
 </template>
