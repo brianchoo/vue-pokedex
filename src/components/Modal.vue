@@ -22,13 +22,13 @@ defineEmits(['close'])
   <teleport to="body">
     <div
       v-if="isOpen"
-      class="fixed inset-0 z-50 flex items-center justify-center bg-slate-100/30"
+      class="fixed inset-0 z-50 flex items-center justify-center bg-slate-400/70"
       @click="$emit('close')"
     >
       <div class="bg-white w-[75%] h-[75%] relative rounded-lg shadow-lg" @click.stop>
         <div class="flex h-full">
           <div class="flex flex-col items-center justify-center w-2/5 relative">
-            <img :src="pokemon.details.image" :alt="pokemon.details.name" />
+            <img class="w-4/5" :src="pokemon.details.image" :alt="pokemon.details.name" />
             <div class="font-bold text-title">{{ pokemon.details.name }}</div>
             <div class="font-bold text-title text-slate-400">{{ pokemon.details.id }}</div>
             <div class="absolute top-3 right-3 p-2 rounded-full">

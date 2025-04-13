@@ -4,8 +4,11 @@ import Card from './components/Card.vue'
 import SearchInput from './components/SearchInput.vue'
 import Modal from './components/Modal.vue'
 import { getPokemonList, loadMorePokemon } from './services/pokemonApi'
+import { loadFromLocalStorage, saveToLocalStorage } from './helpers/localStorage'
 
 const pokemonPerApiCall = 10
+const isModalOpen = ref(false)
+const favoritePokemon = ref(new Map())
 const searchTerm = ref('')
 const pokemonList = ref([])
 const selectedPokemon = ref({})
@@ -13,9 +16,6 @@ const pokemonListParams = ref({
   offset: 0,
   limit: 0,
 })
-const isModalOpen = ref(false)
-// const isFavorite = ref(false)
-const favoritePokemon = ref(new Map())
 
 // Call initial set of Pokemon
 const initialPokemonList = async () => {
@@ -23,19 +23,22 @@ const initialPokemonList = async () => {
   pokemonList.value = response
   pokemonListParams.value.limit = pokemonPerApiCall
   pokemonListParams.value.offset = pokemonPerApiCall
-  console.log(pokemonListParams.value.limit, 'pokemonListParams.value.limit')
 }
 
 const handleLoadMore = async () => {
   const response = await loadMorePokemon(pokemonListParams.value.offset, pokemonPerApiCall)
   pokemonListParams.value.offset += pokemonPerApiCall
   pokemonList.value = [...pokemonList.value, ...response]
-  console.log(pokemonList.value, 'pokemonList')
 }
 
 // Handle search
 const handleSearch = (query) => {
   searchTerm.value = query
+}
+
+const loadFavoritesFromLocalStorage = () => {
+  const localStorageEntries = loadFromLocalStorage('favoritePokemon')
+  favoritePokemon.value = localStorageEntries
 }
 
 const openPokemonModal = (pokemon) => {
@@ -50,16 +53,17 @@ const closeModal = () => {
 }
 
 const handleFavorite = (pokemon) => {
-  console.log('Pokemon received:', pokemon)
   if (pokemon && pokemon.details.id) {
     const pokemonId = pokemon.details.id
     const isFavorite = favoritePokemon.value.get(pokemonId)
     favoritePokemon.value.set(pokemonId, !isFavorite)
+    saveToLocalStorage('favoritePokemon', favoritePokemon)
   }
 }
 
 onMounted(() => {
   initialPokemonList()
+  loadFavoritesFromLocalStorage()
 })
 </script>
 
