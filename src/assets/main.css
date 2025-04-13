@@ -1,0 +1,20 @@
+@import url('https://fonts.googleapis.com/css2?family=Lato:wght@400;700&family=Montserrat:wght@300;400;600&display=swap');
+@import 'tailwindcss';
+
+@theme {
+  --color-red-500: #ef4444;
+  --color-amber-200: #fde68a;
+  --color-amber-400: #fbbf24;
+  --color-amber-600: #d97706;
+  --color-slate-100: #f1f5f9;
+  --color-slate-400: #94a3b8;
+  --color-slate-900: #0f172a;
+
+  --text-default: 20px;
+  --text-title: 48px;
+  --text-title-xl: 62px;
+}
+
+body {
+  font-family: 'Lato', sans-serif;
+}
