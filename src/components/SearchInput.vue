@@ -32,7 +32,7 @@ const handleSearch = () => {
     >
       <img
         class="w-4 h-4"
-        src="../assets/icons/magnifying-glass-solid.svg"
+        src="/src/assets/icons/magnifying-glass-solid.svg"
         alt="magnifying-glass-solid"
       />
     </button>

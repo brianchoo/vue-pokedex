@@ -61,7 +61,11 @@ defineEmits(['close', 'toggleFavorite'])
           @click="$emit('close')"
           class="absolute -top-6 -right-4 lg:-top-8 lg:-right-8 rounded-full bg-amber-400 p-4 hover:bg-amber-600 transition duration-250 ease-in-out cursor-pointer"
         >
-          <img class="w-8 h-8 lg:w-12 lg:h-12" src="../assets/icons/xmark-solid.svg" alt="x-mark" />
+          <img
+            class="w-8 h-8 lg:w-12 lg:h-12"
+            src="/src/assets/icons/xmark-solid.svg"
+            alt="x-mark"
+          />
         </button>
       </div>
     </div>
